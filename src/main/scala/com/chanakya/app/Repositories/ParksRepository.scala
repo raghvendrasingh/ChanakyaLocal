@@ -16,7 +16,7 @@ class ParksRepository {
   lazy val parks = TableQuery[Parks]
   //val url = ConfigReader.url + "/" + ConfigReader.database + "?user=" + ConfigReader.user + "&password=" + ConfigReader.password
   //lazy val db = Database.forURL(url, driver = ConfigReader.driver, executor = AsyncExecutor(ConfigReader.database, numThreads=5, queueSize=5000))
-  val db = Database.forConfig("is.mysql")
+  lazy val db = Database.forConfig("is.mysql")
   println("db = " + db)
 
   def insert(record: Park): Unit =  {
