@@ -78,12 +78,11 @@ class DataFetchService {
   }
 
   /** get park info */
-  def getParkInfo(parkCodes: String): List[Park] = {
+  def getParkInfo(): List[Park] = {
     val authKey = ConfigReader.authKey
-    val urlString = s"https://developer.nps.gov/api/v1/parks?parkCode=${parkCodes}&api_key=${authKey}"
+    val urlString = s"https://developer.nps.gov/api/v1/parks?limit=504&api_key=${authKey}"
     val response = Source.fromURL(urlString).getLines.toList.head
     implicit val formats = org.json4s.DefaultFormats
-    val result = ListBuffer[Map[String, Any]]()
     val parsedJson = parse(response)
     val numParks = (parsedJson\\"total").values.asInstanceOf[BigInt]
     val data = (parsedJson\\"data").values.asInstanceOf[List[Map[String, String]]]
@@ -91,19 +90,14 @@ class DataFetchService {
     convertToParkCaseClass(data)
   }
 
-  def fetchParkInfoAndInsertIntoDatabase(parkCodes: String = ""): Unit = {
+  def fetchParkInfoAndInsertIntoDatabase(): Unit = {
     val parksRepo = new ParksRepository
-    val parks = parkCodes match {
-      case x if x.nonEmpty => getParkInfo(parkCodes)
-      case x if x.isEmpty => getParkInfo(parkCodes) // change it
-      case _ => throw new Exception(s"Invalid park codes: ${parkCodes}")
-    }
-    for (park <- parks) parksRepo.insert(park)
+    val parks = getParkInfo()
+    parksRepo.insert(parks)
   }
 }
 
 object ExecuteDataFetchService extends App {
   val obj = new DataFetchService
-  val parkCodes = "acad,yell"
-  obj.fetchParkInfoAndInsertIntoDatabase(parkCodes)
+  obj.fetchParkInfoAndInsertIntoDatabase()
 }

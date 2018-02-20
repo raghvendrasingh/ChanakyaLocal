@@ -3,9 +3,7 @@ package com.chanakya.app.Repositories
 import com.chanakya.app.Entities.{Park, Parks}
 import com.typesafe.scalalogging.LazyLogging
 import slick.lifted.TableQuery
-import scala.util.{Failure, Success}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import slick.jdbc.MySQLProfile.api._
 
@@ -17,10 +15,10 @@ class ParksRepository extends LazyLogging {
   //val url = ConfigReader.url + "/" + ConfigReader.database + "?user=" + ConfigReader.user + "&password=" + ConfigReader.password
   //lazy val db = Database.forURL(url, driver = ConfigReader.driver, executor = AsyncExecutor(ConfigReader.database, numThreads=5, queueSize=5000))
 
-  def insert(record: Park): Unit =  {
+  def insert(records: List[Park]): Unit =  {
     val db = Database.forConfig("mysql")
     val setup = DBIO.seq(
-      parks += record
+      parks ++= records
       //parks.result.map(println)
     )
     try {
