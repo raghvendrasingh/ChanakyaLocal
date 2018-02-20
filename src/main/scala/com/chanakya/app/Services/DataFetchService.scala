@@ -45,7 +45,7 @@ class DataFetchService {
 
       val (lat, long) = rec("latLong") match {
         case str if str.nonEmpty => {
-          val mp = str.split(",").map(x => x.split(":")).map(arr => arr.head->arr.last).toMap
+          val mp = str.split(",").map(x => x.trim.split(":")).map(arr => arr.head->arr.last).toMap
           val lati = mp.getOrElse("lat","").trim match {
             case x if x.nonEmpty => Some(x.toDouble)
             case x if x.isEmpty => None
@@ -104,6 +104,6 @@ class DataFetchService {
 
 object ExecuteDataFetchService extends App {
   val obj = new DataFetchService
-  val parkCodes = "acad"
+  val parkCodes = "acad,yell"
   obj.fetchParkInfoAndInsertIntoDatabase(parkCodes)
 }

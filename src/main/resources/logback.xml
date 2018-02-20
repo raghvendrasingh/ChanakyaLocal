@@ -9,17 +9,19 @@
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <!-- path to your log file, where you want to store logs -->
     <file>/Users/rasingh/chanakya.log</file>
-    <append>false</append>
+    <append>true</append>
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
 
   <logger name="application" level="DEBUG"/>
-  <logger name="com.zaxxer.hikari" level="INFO"/>
-  <logger name="logger.scala.slick" level="INFO"/>
+  <logger name="com.zaxxer.hikari" level="DEBUG"/>
+  <logger name="logger.slick" level="DEBUG"/>
+  <logger name="slick.jdbc.JdbcBackend.statement"  level="DEBUG" />
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
   </root>
 </configuration>
